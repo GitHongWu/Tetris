@@ -3,23 +3,11 @@ import random
 
 class Shape(object):
 
-    coordsTable = (
-        ((0, 0),     (0, 0),     (0, 0),     (0, 0)),
-        ((0, -1),    (0, 0),     (-1, 0),    (-1, 1)),  # z-shape
-        ((0, -1),    (0, 0),     (1, 0),     (1, 1)),
-        ((0, -1),    (0, 0),     (0, 1),     (0, 2)),
-        ((-1, 0),    (0, 0),     (1, 0),     (0, 1)),
-        ((0, 0),     (1, 0),     (0, 1),     (1, 1)),   # SquareShape
-        ((-1, -1),   (0, -1),    (0, 0),     (0, 1)),
-        ((1, -1),    (0, -1),    (0, 0),     (0, 1)),
-        ((-1, -1),   (1, -1),    (-1, 1),     (1, 1), (0,0))   # x-shape
-    )
-
     def __init__(self):
 
         # self.coords = [[0, 0] for i in range(4)]
-        self.coords = [[0, 0] for i in range(5)]
-        # self.coords = []
+        # self.coords = [[0, 0] for i in range(5)]
+        self.coords = [[]]
         self.pieceShape = Tetrominoe.NoShape
         self.setShape(Tetrominoe.NoShape)
         self.shapeSize = 0
@@ -33,12 +21,15 @@ class Shape(object):
     def setShape(self, shape):
         '''sets a shape'''
 
-        table = Shape.coordsTable[shape]
-
+        table = Tetrominoe.coordsTable[shape]
+        self.coords.clear()
         for i in range(len(table)):
-            for j in range(2):
-                self.coords[i][j] = table[i][j]
-                # self.coords.append(table[i][j])
+            # for j in range(2):
+            #     self.coords[i][j] = table[i][j]
+            tempCoord = []
+            for j in range(len(table[i])):
+                tempCoord.append(table[i][j])
+            self.coords.append(tempCoord)
 
         self.pieceShape = shape
         self.shapeSize = len(table)
@@ -47,6 +38,7 @@ class Shape(object):
     def setRandomShape(self):
         '''chooses a random shape'''
         # self.setShape(random.randint(1, 7))
+        # self.setShape(random.randint(1, len(Tetrominoe.coordsTable) -1 ))
         self.setShape(8)
 
 
@@ -88,6 +80,7 @@ class Shape(object):
 
     def minY(self):
         '''returns min y value'''
+        # m = self.coords[0][1]
         m = 0
         for i in range(self.shapeSize):
             m = min(m, self.coords[i][1])
@@ -108,6 +101,7 @@ class Shape(object):
         result = Shape()
         result.pieceShape = self.pieceShape
         result.shapeSize = self.shapeSize
+        result.coords = [[0, 0] for i in range(len(self.coords))]
 
         for i in range(self.shapeSize):
             result.setX(i, self.y(i))
@@ -120,10 +114,10 @@ class Shape(object):
 
         result = Shape()
         result.pieceShape = self.pieceShape
+        result.shapeSize = self.shapeSize
+        result.coords = [[0, 0] for i in range(len(self.coords))]
 
         for i in range(self.shapeSize):
-
             result.setX(i, -self.y(i))
             result.setY(i, self.x(i))
-
         return result

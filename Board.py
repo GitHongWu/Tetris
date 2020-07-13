@@ -8,8 +8,8 @@ class Board(QFrame):
     # 创建了一个自定义信号msg2Statusbar，当我们想往statusbar里显示信息的时候，发出这个信号就行了
     msg2Statusbar = pyqtSignal(str)
     # 这些是Board类的变量。BoardWidth和BoardHeight分别是board的宽度和高度。Speed是游戏的速度，每300ms出现一个新的方块
-    BoardWidth = 20
-    BoardHeight = 44
+    BoardWidth = 10
+    BoardHeight = 22
     Speed = 300
 
     def __init__(self, parent):
@@ -62,6 +62,23 @@ class Board(QFrame):
         return self.contentsRect().height() // Board.BoardHeight
     
 
+    def start(self):
+        '''starts game'''
+
+        if self.isPaused:
+            return
+
+        self.isStarted = True
+        self.isWaitingAfterLine = False
+        self.numLinesRemoved = 0
+        self.clearBoard()
+
+        self.msg2Statusbar.emit(str(self.numLinesRemoved))
+
+        self.newPiece()
+        self.timer.start(Board.Speed, self)
+
+
     # pause()方法用来暂停游戏，停止计时并在statusbar上显示一条信息
     def pause(self):
         '''pauses game'''
@@ -80,22 +97,6 @@ class Board(QFrame):
             self.msg2Statusbar.emit(str(self.numLinesRemoved))
 
         self.update()
-
-    def start(self):
-        '''starts game'''
-
-        if self.isPaused:
-            return
-
-        self.isStarted = True
-        self.isWaitingAfterLine = False
-        self.numLinesRemoved = 0
-        self.clearBoard()
-
-        self.msg2Statusbar.emit(str(self.numLinesRemoved))
-
-        self.newPiece()
-        self.timer.start(Board.Speed, self)
 
 
     # 渲染是在paintEvent()方法里发生的QPainter负责PyQt5里所有低级绘画操作
@@ -220,8 +221,8 @@ class Board(QFrame):
     def pieceDropped(self):
         '''after dropping shape, remove full lines and create new shape'''
 
+        # for i in range(self.curPiece.shapeSize):
         for i in range(self.curPiece.shapeSize):
-
             x = self.curX + self.curPiece.x(i)
             y = self.curY - self.curPiece.y(i)
             self.setShapeAt(x, y, self.curPiece.shape())
@@ -319,7 +320,8 @@ class Board(QFrame):
         '''draws a square of a shape'''        
 
         colorTable = [0x000000, 0xCC6666, 0x66CC66, 0x6666CC,
-                      0xCCCC66, 0xCC66CC, 0x66CCCC, 0xDAAA00, 0xCCFF66]
+                      0xCCCC66, 0xCC66CC, 0x66CCCC, 0xDAAA00,
+                      0xCCFF66, 0x66CCFF]
 
         color = QColor(colorTable[shape])
         painter.fillRect(x + 1, y + 1, self.squareWidth() - 2, 
