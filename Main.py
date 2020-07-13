@@ -26,7 +26,7 @@ class Tetris(QMainWindow):
 
         self.tboard.start()
 
-        self.resize(180, 380)
+        self.resize(200, 500)
         self.center()
         self.setWindowTitle('Tetris')        
         self.show()

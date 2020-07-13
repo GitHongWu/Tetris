@@ -9,7 +9,9 @@ class Board(QFrame):
     msg2Statusbar = pyqtSignal(str)
     # 这些是Board类的变量。BoardWidth和BoardHeight分别是board的宽度和高度。Speed是游戏的速度，每300ms出现一个新的方块
     BoardWidth = 10
-    BoardHeight = 22
+    BoardHeight = 25
+    # BoardWidth = 20
+    # BoardHeight = 50
     Speed = 300
 
     def __init__(self, parent):

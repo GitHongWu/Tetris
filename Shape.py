@@ -38,8 +38,8 @@ class Shape(object):
     def setRandomShape(self):
         '''chooses a random shape'''
         # self.setShape(random.randint(1, 7))
-        # self.setShape(random.randint(1, len(Tetrominoe.coordsTable) -1 ))
-        self.setShape(8)
+        self.setShape(random.randint(1, len(Tetrominoe.coordsTable) -1 ))
+        # self.setShape(8)
 
 
     def x(self, index):
